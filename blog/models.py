@@ -15,8 +15,7 @@ class Post(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = 'پست'
-        verbose_name_plural = 'پست ها'
+        pass
         
     def __str__(self):
         return "{} , {} ".format(self.title,self.id)

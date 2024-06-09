@@ -6,4 +6,5 @@ from blog.models import Post
 class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_date'
     ordering = ['created_date']
+    list_filter = ['status']
 admin.site.register(Post,PostAdmin)
