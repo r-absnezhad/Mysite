@@ -108,7 +108,7 @@
 									</div>
 									<a class="posts-title" href="/blog/{{post.id}}"><h3>{{post.title}}</h3></a>
 									<p class="excert">
-										{{post.content|truncatechars:90}}
+										{{post.content|truncatechars:90|safe}}
 										
 									</p>
 									<a href="#" class="primary-btn">View More</a>
