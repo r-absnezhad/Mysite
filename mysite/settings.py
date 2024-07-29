@@ -14,6 +14,10 @@ from pathlib import Path
 import os
 import mimetypes
 from datetime import datetime
+import django
+from django.utils.encoding import smart_str
+django.utils.encoding.smart_text = smart_str
+
 
 
 DEBUG_TOOLBAR_CONFIG = {
