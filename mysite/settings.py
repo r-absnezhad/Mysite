@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'captcha',
     'taggit',
     'robots',
-    'blog'
+    'blog',
+    'accounts'
     
 ]
 # sites framework
