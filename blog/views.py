@@ -1,9 +1,10 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from blog.models import Post,Comment
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from blog.forms import CommentForm
 from django.contrib import messages
-
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 # Create your views here.
 def blog_view(request,**kwargs):
     posts = Post.objects.filter(status = True)
@@ -33,13 +34,18 @@ def blog_single(request,pid):
             form.save()
             messages.add_message(request,messages.SUCCESS,'YOUR COMMENT SUBMITED CORRECTLY')
         else:
-            messages.add_message(request,messages.ERROR,'YOUR COMMENT DID NOT SUBMITED')         
+            messages.add_message(request,messages.ERROR,'YOUR COMMENT DID NOT SUBMITED')
+                 
     posts = Post.objects.filter(status = True)
     post = get_object_or_404(posts,pk=pid)
-    comments = Comment.objects.filter(post=post.id,approved=True)
-    form = CommentForm()
-    content = {'post': post , 'comments':comments , 'form':form } 
-    return render(request,'blog/blog-single.html',content)
+    
+    if not post.login_required:
+        comments = Comment.objects.filter(post=post.id,approved=True)
+        form = CommentForm()
+        content = {'post': post , 'comments':comments , 'form':form } 
+        return render(request,'blog/blog-single.html',content)
+    else:
+        return HttpResponseRedirect(reverse('accounts:login'))
 
 def test(request):
     return render(request,'test.html')
