@@ -28,6 +28,9 @@ def blog_view(request,**kwargs):
     return render(request,'blog/blog-home.html',content)
 
 def blog_single(request,pid): 
+    posts = Post.objects.filter(status = True)
+    post = get_object_or_404(posts,pk=pid)
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -36,16 +39,16 @@ def blog_single(request,pid):
         else:
             messages.add_message(request,messages.ERROR,'YOUR COMMENT DID NOT SUBMITED')
                  
-    posts = Post.objects.filter(status = True)
-    post = get_object_or_404(posts,pk=pid)
     
-    if not post.login_required:
-        comments = Comment.objects.filter(post=post.id,approved=True)
-        form = CommentForm()
-        content = {'post': post , 'comments':comments , 'form':form } 
-        return render(request,'blog/blog-single.html',content)
-    else:
-        return HttpResponseRedirect(reverse('accounts:login'))
+    if post.login_required and not request.user.is_authenticated:
+        next_url = request.get_full_path()  # Current URL with query parameters
+        return redirect(f'{reverse("accounts:login")}?next={next_url}')
+    
+    comments = Comment.objects.filter(post=post.id, approved=True)
+    form = CommentForm()
+    content = {'post': post, 'comments': comments, 'form': form}
+    return render(request, 'blog/blog-single.html', content)
+
 
 def test(request):
     return render(request,'test.html')
